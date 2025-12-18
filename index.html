@@ -1,0 +1,1285 @@
+<!doctype html>
+<html lang="es">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>Venta de Laptops - Tienda Online</title>
+	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+	<!-- Meta para SEO y compartir en redes -->
+	<meta name="description" content="Tienda de laptops con carrito funcional, 20 productos disponibles, compra segura y diseño adaptable. Entrega rápida.">
+	<meta name="keywords" content="laptops, computadoras, tienda online, carrito de compras">
+	<meta name="author" content="Tienda de Laptops">
+	<meta name="robots" content="index, follow">
+	<link rel="canonical" href="https://usuario.github.io/mi-pagina/">
+
+	<!-- Open Graph para Facebook, WhatsApp, LinkedIn -->
+	<meta property="og:title" content="Venta de Laptops - Tienda Online">
+	<meta property="og:description" content="Tienda de laptops con carrito funcional, 20 productos disponibles, compra segura y diseño adaptable. Entrega rápida.">
+	<meta property="og:url" content="https://usuario.github.io/mi-pagina/">
+	<meta property="og:type" content="website">
+	<meta property="og:image" content="https://usuario.github.io/mi-pagina/og-image.jpg">
+	<meta property="og:image:width" content="1200">
+	<meta property="og:image:height" content="630">
+	<meta property="og:locale" content="es_ES">
+	<meta property="og:site_name" content="Venta de Laptops">
+
+	<!-- Twitter Card -->
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:title" content="Venta de Laptops - Tienda Online">
+	<meta name="twitter:description" content="Tienda de laptops con carrito funcional, 20 productos disponibles, compra segura y diseño adaptable.">
+	<meta name="twitter:image" content="https://usuario.github.io/mi-pagina/og-image.jpg">
+	<meta name="twitter:creator" content="@tuusuario">
+
+	<!-- Favicon y colores -->
+	<meta name="theme-color" content="#063847">
+	<meta name="msapplication-TileColor" content="#063847">
+	<link rel="icon" type="image/png" href="favicon.png" sizes="32x32">
+	<link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+	<!-- Prefetch para redes -->
+	<link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+</head>
+	<style>
+		/* Pequeños ajustes locales */
+		.title{ text-align:center; margin:18px 0; font-size:2rem }
+		.productos{padding:12px 0}
+		.card .card-title{font-weight:700}
+		.btn-small{padding:8px 10px;font-size:0.95rem}
+		.modal.show{display:flex}
+		.form-row{display:flex;gap:8px}
+		.form-row .field{flex:1}
+		.cart-btn-top{position:relative;background:var(--accent);color:#fff;border:none;padding:10px 14px;border-radius:6px;cursor:pointer;font-size:1.1rem;margin-right:8px}
+		.cart-btn-top:hover{opacity:0.9}
+		.cart-badge{position:absolute;top:-8px;right:-8px;background:#d32f2f;color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700}
+		.cart-sidebar{position:fixed;right:0;top:0;width:350px;height:100%;background:#fff;box-shadow:-4px 0 20px rgba(0,0,0,0.15);z-index:1100;transform:translateX(100%);transition:transform 0.3s ease;display:flex;flex-direction:column;padding:20px}
+		.cart-sidebar.open{transform:translateX(0)}
+		.cart-header{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #f0f0f0;padding-bottom:12px;margin-bottom:16px}
+		.cart-header h3{margin:0;font-size:1.2rem}
+		.cart-close{background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--accent)}
+		.cart-items-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:12px}
+		.cart-item-row{display:flex;gap:12px;border:1px solid #eee;padding:10px;border-radius:6px;align-items:center}
+		.cart-item-img{width:60px;height:45px;object-fit:cover;border-radius:4px;background:#f5f5f5}
+		.cart-item-info{flex:1;font-size:0.95rem}
+		.cart-item-name{font-weight:700;color:var(--accent)}
+		.cart-item-price{color:var(--muted);font-size:0.9rem}
+		.cart-item-qty{display:flex;gap:4px;align-items:center;margin-top:4px}
+		.cart-item-remove{background:#f5f5f5;color:#d32f2f;border:none;padding:4px 8px;border-radius:4px;cursor:pointer;font-weight:700;font-size:0.85rem}
+		.cart-footer{display:flex;flex-direction:column;gap:8px;border-top:2px solid #f0f0f0;padding-top:12px;margin-top:12px}
+		.cart-total{font-size:1.1rem;font-weight:700;color:var(--accent);text-align:center}
+		.cart-checkout{width:100%;background:var(--accent);color:#fff;border:none;padding:12px;border-radius:6px;cursor:pointer;font-weight:700;font-size:0.95rem}
+		.cart-checkout:hover{opacity:0.9}
+		.cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:1050;display:none}
+		.cart-overlay.open{display:block}
+		
+		/* Estilos carrito mejorado */
+		.navbar {
+			width: 100%;
+			background-color: #f5f5f5;
+			padding: 10px 20px;
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			z-index: 999;
+			box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+		}
+		
+		.cart {
+			position: relative;
+			color: black;
+			font-size: 24px;
+			cursor: pointer;
+			background: none;
+			border: none;
+		}
+		
+		/* Navbar derecha */
+		.navbar-right {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+		}
+		
+		.navbar-buttons {
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+		}
+		
+		.btn-login {
+			background: var(--accent);
+			color: #fff;
+			border: none;
+			padding: 10px 16px;
+			border-radius: 6px;
+			cursor: pointer;
+			font-weight: 600;
+			font-size: 14px;
+			transition: opacity 0.3s;
+			white-space: nowrap;
+		}
+		
+		.btn-login:hover {
+			opacity: 0.9;
+		}
+		
+		.btn-category {
+			background: #27474a;
+			color: #fff;
+			border: none;
+			padding: 10px 14px;
+			border-radius: 6px;
+			cursor: pointer;
+			font-weight: 600;
+			font-size: 13px;
+			transition: opacity 0.3s;
+			white-space: nowrap;
+			margin-right: auto;
+		}
+		
+		.btn-category:hover {
+			opacity: 0.85;
+		}
+		
+		.user-menu {
+			position: relative;
+		}
+		
+		.user-btn {
+			background: var(--accent);
+			color: #fff;
+			border: none;
+			padding: 8px 12px;
+			border-radius: 6px;
+			cursor: pointer;
+			font-weight: 600;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+		}
+		
+		.user-btn:hover {
+			opacity: 0.9;
+		}
+		
+		.dropdown-menu {
+			position: absolute;
+			top: 100%;
+			right: 0;
+			background: #fff;
+			border: 1px solid #ddd;
+			border-radius: 6px;
+			min-width: 150px;
+			box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+			display: none;
+			flex-direction: column;
+			z-index: 1200;
+			margin-top: 8px;
+		}
+		
+		.dropdown-menu.show {
+			display: flex;
+		}
+		
+		.dropdown-item {
+			padding: 12px 16px;
+			border: none;
+			background: none;
+			cursor: pointer;
+			font-size: 14px;
+			text-align: left;
+			color: #333;
+			transition: background 0.2s;
+		}
+		
+		.dropdown-item:hover {
+			background: #f5f5f5;
+		}
+		
+		.dropdown-item.logout {
+			color: #d32f2f;
+		}
+		
+		/* Modal Login */
+		.modal-login {
+			position: fixed;
+			inset: 0;
+			background: rgba(0,0,0,0.5);
+			display: none;
+			align-items: center;
+			justify-content: center;
+			z-index: 1300;
+		}
+		
+		.modal-login.show {
+			display: flex;
+		}
+		
+		.login-content {
+			background: #fff;
+			padding: 30px;
+			border-radius: 8px;
+			width: 90%;
+			max-width: 350px;
+			box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+		}
+		
+		.login-content h2 {
+			text-align: center;
+			margin-top: 0;
+			color: var(--accent);
+			font-size: 1.5rem;
+		}
+		
+		.login-form {
+			display: flex;
+			flex-direction: column;
+			gap: 14px;
+		}
+		
+		.login-form label {
+			display: flex;
+			flex-direction: column;
+			gap: 4px;
+			font-weight: 600;
+			font-size: 14px;
+		}
+		
+		.login-form input {
+			padding: 10px;
+			border: 1px solid #ddd;
+			border-radius: 6px;
+			font-size: 14px;
+		}
+		
+		.login-form input:focus {
+			outline: none;
+			border-color: var(--accent);
+			box-shadow: 0 0 4px rgba(6,56,71,0.2);
+		}
+		
+		.login-buttons {
+			display: flex;
+			gap: 8px;
+			margin-top: 8px;
+		}
+		
+		.login-buttons button {
+			flex: 1;
+			padding: 12px;
+			border: none;
+			border-radius: 6px;
+			cursor: pointer;
+			font-weight: 600;
+			font-size: 14px;
+			transition: opacity 0.3s;
+		}
+		
+		.login-buttons .btn-submit {
+			background: var(--accent);
+			color: #fff;
+		}
+		
+		.login-buttons .btn-submit:hover {
+			opacity: 0.9;
+		}
+		
+		.login-buttons .btn-cancel {
+			background: #f0f0f0;
+			color: #333;
+		}
+		
+		.login-buttons .btn-cancel:hover {
+			background: #e0e0e0;
+		}
+		
+		/* Sección de categorías */
+		.categories-section {
+			display: none;
+			padding: 20px;
+		}
+		
+		.categories-section.show {
+			display: block;
+		}
+		
+		.category {
+			margin-bottom: 30px;
+		}
+		
+		.category h2 {
+			color: var(--accent);
+			border-bottom: 2px solid var(--accent);
+			padding-bottom: 10px;
+			margin-bottom: 16px;
+		}
+		
+		.category-grid {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: 18px;
+		}
+		
+		.cart span {
+			background: red;
+			color: white;
+			border-radius: 50%;
+			padding: 2px 6px;
+			font-size: 12px;
+			position: absolute;
+			top: -8px;
+			right: -10px;
+		}
+		
+		/* Ajuste para content con navbar fija */
+		body {
+			padding-top: 50px;
+		}
+		
+		/* Media queries para móviles */
+		@media(max-width:768px){
+			.title{font-size:1.5rem;margin:12px 0}
+			.cart-sidebar{width:100%;max-width:90vw}
+			.cart{font-size:20px}
+			.navbar{padding:10px}
+			.navbar-buttons{flex-direction:row;flex-wrap:wrap;gap:6px}
+			.btn-login{padding:8px 10px;font-size:12px}
+			.btn-category{padding:8px 10px;font-size:11px}
+			.category-grid{grid-template-columns:repeat(2,1fr)}
+		}
+		
+		@media(max-width:560px){
+			body{padding-top:60px}
+			.title{font-size:1.3rem;margin:8px 0}
+			.cart-sidebar{width:100vw;padding:16px}
+			.cart{font-size:18px}
+			.navbar{padding:8px 10px}
+			.cart span{padding:1px 4px;font-size:10px}
+			.cart-header h3{font-size:1rem}
+			.cart-item-img{width:50px;height:40px}
+			.cart-item-info{font-size:0.9rem}
+			.modal-content{padding:12px}
+			.form-row{flex-direction:column}
+			.form-row .field{width:100%}
+			.category-grid{grid-template-columns:1fr}
+			.btn-login{padding:6px 10px;font-size:11px}
+			.btn-menu{padding:6px 10px;font-size:11px}
+			.navbar-right{gap:8px}
+			.category-sidebar{width:90vw}
+		}
+	</style>
+</head>
+<body>
+	<!-- Barra navbar fija -->
+	<div class="navbar">
+		<button id="btnMenu" class="btn-menu">☰ Categorías</button>
+		<button id="cartToggle" class="cart">
+			🛒
+			<span id="cartCounterBadge">0</span>
+		</button>
+		<div class="navbar-right">
+			<button id="btnLogin" class="btn-login">Iniciar Sesión</button>
+			<div id="userMenu" class="user-menu" style="display:none">
+				<button id="userBtn" class="user-btn">
+					👤 <span id="userName">Usuario</span> ▼
+				</button>
+				<div id="dropdownMenu" class="dropdown-menu">
+					<button class="dropdown-item" onclick="scrollToCategories()">Ver Productos</button>
+					<button class="dropdown-item logout" onclick="logout()">Cerrar Sesión</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Sidebar de categorías -->
+	
+
+	<header class="site-header">
+		<div class="container header-inner">
+			<h1 class="brand title">Venta de Laptops</h1>
+		</div>
+	</header>
+
+	<!-- Overlay carrito -->
+	<div id="cartOverlay" class="cart-overlay"></div>
+
+	<!-- Carrito lateral -->
+	<aside id="cartSidebar" class="cart-sidebar">
+		<div class="cart-header">
+			<h3>Carrito de compras</h3>
+			<button class="cart-close" id="cartCloseBtn">✕</button>
+		</div>
+		<div class="cart-items-list" id="cartItemsList"></div>
+		<div class="cart-footer">
+			<div class="cart-total">Total: <span id="cartTotal">$0.00</span></div>
+			<button class="cart-checkout" id="checkoutBtn">Proceder al pago</button>
+		</div>
+	</aside>
+
+	<main class="container">
+		<section class="productos">
+			<h2 class="section-title">Descuentos en productos</h2>
+			<div class="grid" id="productGrid"></div>
+		</section>
+
+		<section class="about" style="margin-top:28px">
+			<h2 class="section-title">Sobre esta página</h2>
+			<p style="max-width:900px;margin:0 auto;color:#27474a">Bienvenido a nuestra tienda de laptops. Aquí encontrarás modelos seleccionados para trabajo, estudio y gaming. Usa el botón "Detalles" para ver especificaciones y el botón "Comprar" para abrir el formulario de pago seguro (simulado).</p>
+		</section>
+
+		<section class="contact" style="margin-top:28px;padding-bottom:48px">
+			<h2 class="section-title">Contacto</h2>
+			<form class="contact-form" id="contactForm">
+				<label>Nombre
+					<input type="text" id="contactName" required>
+				</label>
+				<label>Email
+					<input type="email" id="contactEmail" required>
+				</label>
+				<label>Mensaje
+					<textarea id="contactMsg" rows="4" required></textarea>
+				</label>
+				<div style="text-align:center;margin-top:8px">
+					<button class="btn" type="submit">Enviar mensaje</button>
+				</div>
+			</form>
+		</section>
+
+		<!-- Sección de categorías (visible solo después de login) -->
+		<section id="categoriesSection" class="categories-section">
+			<div style="text-align:right;margin-bottom:10px">
+				<button id="viewOrdersBtn" class="btn">Ver pedidos</button>
+			</div>
+			<div class="category">
+				<h2>💻 Laptops</h2>
+				<div class="category-grid" id="laptopsGrid"></div>
+			</div>
+
+			<div class="category" style="display:block">
+				<h2>🖱️ Ratones (Mouse)</h2>
+				<div class="category-grid" id="mousesGrid"></div>
+			</div>
+
+			<div class="category">
+				<h2>⌨️ Teclados</h2>
+				<div class="category-grid" id="keyboardsGrid"></div>
+			</div>
+		</section>
+	</main>
+
+	<!-- Modal Login -->
+	<div id="loginModal" class="modal-login">
+		<div class="login-content">
+			<h2>Iniciar Sesión</h2>
+			<form class="login-form" id="loginForm">
+				<label>Usuario o Email
+					<input type="text" id="loginEmail" required>
+				</label>
+				<label>Contraseña
+					<input type="password" id="loginPassword" required>
+				</label>
+				<div class="login-buttons">
+					<button type="submit" class="btn-submit">Entrar</button>
+					<button type="button" class="btn-cancel" onclick="closeLoginModal()">Cancelar</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<footer class="site-footer">
+		<div class="container footer-inner">
+			<small>© 2025 Tienda de Laptops — Demo de ejemplo</small>
+		</div>
+	</footer>
+
+	<!-- Modal Detalles -->
+	<div id="detailsModal" class="modal" role="dialog" aria-modal="true">
+		<div class="modal-content">
+			<button class="btn-outline" onclick="closeDetails()">Cerrar</button>
+			<img id="detailsImg" class="modal-img" src="" alt="Imagen">
+			<h3 id="detailsName"></h3>
+			<p id="detailsDesc" class="desc"></p>
+			<p><strong>Precio:</strong> <span id="detailsPrice"></span></p>
+			<p><strong>Especificaciones:</strong></p>
+			<ul id="detailsSpecs"></ul>
+		</div>
+	</div>
+
+	<!-- Modal Comprar -->
+	<div id="buyModal" class="modal" role="dialog" aria-modal="true">
+		<div class="modal-content">
+			<button class="btn-outline" onclick="closeBuy()">Cerrar</button>
+			<h3 id="buyTitle">Comprar</h3>
+			<form id="buyForm">
+				<label>Producto
+					<input type="text" id="buyProduct" readonly>
+				</label>
+				<label>Número de tarjeta
+					<input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" required>
+				</label>
+				<div class="form-row">
+					<div class="field">
+						<label>Nombre en tarjeta
+							<input type="text" id="cardName" required>
+						</label>
+					</div>
+					<div class="field">
+						<label>Exp / CVV
+							<div style="display:flex;gap:8px">
+								<input type="text" id="cardExp" placeholder="MM/AA" style="flex:1" required>
+								<input type="text" id="cardCvv" placeholder="CVV" style="width:80px" required>
+							</div>
+						</label>
+					</div>
+				</div>
+				<label>Dirección
+					<input type="text" id="address" placeholder="Calle, ciudad, país" required>
+				</label>
+				<div style="text-align:center;margin-top:12px">
+					<button class="btn" type="submit">Pagar ahora</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<!-- Modal Pedidos -->
+	<div id="ordersModal" class="modal" role="dialog" aria-modal="true">
+	    <div class="modal-content">
+	        <button class="btn-outline" onclick="closeOrders()">Cerrar</button>
+	        <h3>Pedidos</h3>
+	        <div id="ordersList" style="max-height:60vh;overflow:auto;margin-top:12px"></div>
+	    </div>
+	</div>
+
+	<script>
+		// Captura errores globales para que no rompan la ejecución
+		window.onerror = function(msg, src, line, col, err){
+			console.error('Global error:', msg, 'at', src + ':' + line + ':' + col, err);
+			return false;
+		};
+
+		function ensureNavbarBadge(){
+			let el = document.getElementById('cartCounterBadge');
+			if(!el){
+				const toggle = document.getElementById('cartToggle');
+				if(toggle){
+					el = document.createElement('span');
+					el.id = 'cartCounterBadge';
+					el.style.background = 'red';
+					el.style.color = '#fff';
+					el.style.borderRadius = '50%';
+					el.style.padding = '2px 6px';
+					el.style.fontSize = '12px';
+					el.style.marginLeft = '6px';
+					toggle.appendChild(el);
+				}
+			}
+			return el;
+		}
+		const products = [
+			{ id: 1, name: 'Acer swift 3', price: '$12325.00', img: 'images4/Acer Swift 3.jpg', desc: 'Laptop Modelo ideal para tareas diarias y multimedia. Procesador eficiente, buena batería y diseño ligero.', specs: ['Procesador: Intel® Core™ i5 de 11ª Generación', 'Memoria RAM: 8 GB', 'Almacenamiento: 256 GB SSD', 'Pantalla: 14 pulgadas con gráficos Intel® Iris® Xe', 'Sistema Operativo: Windows 11 Home. '] },
+			{ id: 2, name: 'Alienware m16', price: '$35350.00', img: 'images4/Alienware m16.jpg', desc: 'Laptop Modelo  ideal para tareas diarias y multimedia. Procesador eficiente, buena batería y diseño ligero.', specs: ['Intel Core Ultra 7 155H Núcleos del procesador: 16', '40.6 cm (16") Quad HD+ 2560 x 1600 Pixeles WVA Retroiluminación LED 16:9', '16 GB DDR5-SDRAM', '1 TB SSD', 'NVIDIA GeForce RTX 4060 8 GB Intel Arc Graphics', 'Ethernet 2500 Mbit/s Bluetooth', 'Ión de litio 90 Wh', 'Windows 11 Home 64-bit']},
+			{ id: 3, name: 'Gigabyte Aero 16', price: '$12375.00', img: 'images4/Gigabyte Aero 16.jpg', desc: 'Laptop Modelo ideal para tareas diarias y multimedia. Procesador eficiente, buena batería y diseño ligero.', specs: ['Procesador: Intel® Core™ i9 de 12ª generación.', 'GPU: NVIDIA® GeForce RTX™ de la serie 30.', 'Pantalla: Pantalla OLED 4K+ de 16 pulgadas con relación de aspecto 16:10 y brillo de 100% de la gama de colores DCI-P3.'] },
+			{ id: 4, name: 'HP Spectre x360 14', price: '$3400.00', img: 'images4/HP Spectre x360 14.jpg', desc: 'Laptop Modelo  ideal para tareas diarias y multimedia. Procesador eficiente, buena batería y diseño ligero.', specs: ['Procesador: Intel Core Ultra de nueva generación.', 'Pantalla: 14.0″, 2.8K (2880 x 1800), OLED, 120 Hz.', 'Almacenamiento: Hasta 4000GB SSD.', 'Memoria RAM: Hasta 32GB.', 'Sistema operativo: Windows 11 Pro.'] },
+			{ id: 5, name: 'Huawei MateBook X Pro', price: '$12425.00', img: 'images4/Huawei MateBook X Pro.jpg', desc: 'Laptop Modelo ideal para tareas diarias y multimedia. Procesador eficiente, buena batería y diseño ligero.', specs: ['Pantalla: OLED táctil flexible de 14.2 pulgadas', 'Resolución: 3120x2080 (3.1K), tasa de refresco 120Hz, brillo 1000 nits, formato 3:2, tecnología X-True™', 'Procesador: Intel Core Ultra 9 185H o Core Ultra 7 155H. Gráficos: Intel Arc Graphics.', 'Memoria (RAM): 16 GB o 32 GB LPDDR5', 'Almacenamiento: SSD NVMe PCIe (hasta 2 TB)', 'Diseño y peso: Aleación de magnesio, ultraligero (980g), 13.5mm de grosor', 'Sistema operativo: Windows 11'] },
+			{ id: 6, name: 'Lenovo Legion 7i', price: '$22450.00', img: 'images4/Lenovo Legion 7i.jpg', desc: 'Laptop Modelo ideal para tareas diarias y multimedia. Procesador eficiente, buena batería y diseño ligero.', specs: ['Procesador: Hasta Intel® Core™ Ultra 9 275HX (arquitectura Ultra con núcleos de rendimiento y eficiencia)', 'Gráficos: GPUs NVIDIA GeForce RTX (el modelo y TGP varían, pero potentes)', 'Memoria: DDR5 de alta velocidad, hasta 32 GB (6400 MT/s)', 'Almacenamiento: SSD PCIe M.2 de alta velocidad, hasta 2 TB'] },
+			{ id: 7, name: 'LG Gram 17', price: '$12475.00', img: 'images4/LG Gram 17.jpg', desc: 'Laptop Modelo ideal para tareas diarias y multimedia. Procesador eficiente, buena batería y diseño ligero.', specs: ['Pantalla: Panel IPS de 17 pulgadas, resolución WQXGA (2560x1600), relación de aspecto 16:10', 'Rendimiento: Procesadores Intel Core (desde i7 de 10ª Gen hasta Ultra), gráficos Intel Iris Xe/Arc, RAM LPDDR5 rápida (16/32GB), SSD NVMe', 'Batería: Baterías de alta capacidad (77-90 Wh) para una gran autonomía, a menudo superando las 10 horas'] },
+			{ id: 8, name: 'MSI Stealth 14 Studio', price: '$17500.00', img: 'images4/MSI Stealth 14 Studio.jpg', desc: 'Laptop Modelo ideal para tareas diarias y multimedia. Procesador eficiente, buena batería y diseño ligero.', specs: ['CPU: Procesadores Intel Core i7 de 13ª Generación (ej. i7-13700H, i7-13620H)', 'GPU: NVIDIA GeForce RTX 40 series (RTX 4060, RTX 4070) para tareas gráficas y juegos', 'Refrigeración: Sistema de enfriamiento con cámara de vapor para un buen control térmico', 'Paneles de 14 pulgadas, relación 16:10, con opciones FHD+ (165Hz) o QHD+ (240Hz)'] },
+			{ id: 9, name: 'Razer Blade 15', price: '$19525.00', img: 'images4/Razer Blade 15.jpg', desc: 'Laptop Modelo ideal para tareas diarias y multimedia. Procesador eficiente, buena batería y diseño ligero.', specs: ['Procesadores: Intel Core i7 o i9 de alto rendimiento (ej. 10ª, 12ª Gen), con múltiples núcleos y hilos para multitarea y gaming', 'Gráficos (GPU): Tarjetas NVIDIA GeForce RTX (ej. RTX 2060, 2070, 3060, 3080), dedicadas para gráficos intensivos', 'Pantalla: 15.6 pulgadas, con opciones de resolución Full HD (1080p) a 144Hz, 240Hz, 300Hz, o 4K UHD/OLED táctil y no táctil, con bordes delgados', 'Memoria RAM: Típicamente 16GB o 32GB DDR4, con soporte para expansión (hasta 64GB en algunos modelos)', 'Almacenamiento: SSD NVMe PCIe rápido (ej. 512GB, 1TB) para arranque y carga rápidos'] },
+			
+			
+		];
+
+		const grid = document.getElementById('productGrid');
+		products.forEach(p=>{
+			const card = document.createElement('article');
+			card.className = 'card';
+			card.innerHTML = `
+				<img class="card-img" src="${p.img}" alt="${p.name}">
+				<h3 class="card-title">${p.name}</h3>
+				<p class="price">${p.price}</p>
+				<p class="desc">${p.desc}</p>
+				<div class="card-actions">
+					<button class="btn btn-small" onclick="showDetails(${p.id})">Detalles</button>
+					<button class="btn-outline btn-small" onclick="showBuy(${p.id})">Comprar</button>
+				</div>
+				<button class="btn btn-small" style="width:100%;margin-top:8px" onclick="addToCart(${p.id})">Agregar al carrito</button>
+			`;
+			grid.appendChild(card);
+		});
+
+		// Modales
+		const detailsModal = document.getElementById('detailsModal');
+		const buyModal = document.getElementById('buyModal');
+
+		function showDetails(id){
+			const p = products.find(x=>x.id===id);
+			document.getElementById('detailsImg').src = p.img;
+			document.getElementById('detailsName').textContent = p.name;
+			document.getElementById('detailsDesc').textContent = p.desc;
+			document.getElementById('detailsPrice').textContent = p.price;
+			const specsList = document.getElementById('detailsSpecs');
+			specsList.innerHTML = '';
+			p.specs.forEach(s=>{const li=document.createElement('li');li.textContent=s;specsList.appendChild(li)});
+			detailsModal.classList.add('show');
+		}
+		function closeDetails(){ detailsModal.classList.remove('show') }
+
+		function showBuy(id){
+			const p = products.find(x=>x.id===id);
+			document.getElementById('buyProduct').value = p.name + ' — ' + p.price;
+			buyModal.classList.add('show');
+		}
+		function closeBuy(){ buyModal.classList.remove('show') }
+
+		document.getElementById('buyForm').addEventListener('submit', function(e){
+			e.preventDefault();
+			// Guardar pedido en localStorage
+			const productText = document.getElementById('buyProduct').value || '';
+			const cardName = document.getElementById('cardName').value || '';
+			const address = document.getElementById('address').value || '';
+			let itemsDesc = '';
+			if(Array.isArray(cart) && cart.length > 0){
+				itemsDesc = cart.map(i => `${i.name} x${i.qty}`).join(', ');
+			} else {
+				itemsDesc = productText;
+			}
+			let orders = [];
+			try{ orders = JSON.parse(localStorage.getItem('laptopsOrders') || '[]'); }catch(e){ orders = []; }
+			const order = { id: Date.now(), when: Date.now(), items: itemsDesc, customer: cardName, address };
+			orders.push(order);
+			localStorage.setItem('laptopsOrders', JSON.stringify(orders));
+			// Vaciar carrito y actualizar UI
+			cart = [];
+			saveCartToStorage();
+			updateCart();
+			closeBuy();
+			this.reset();
+			showMessage('Pedido guardado. Gracias por su compra.');
+		});
+
+		// Contact form
+		document.getElementById('contactForm').addEventListener('submit', function(e){
+			e.preventDefault();
+			alert('Mensaje enviado. Gracias por contactarnos.');
+			this.reset();
+		});
+
+		// Cerrar modales al pulsar fuera del contenido
+		document.addEventListener('click', function(e){
+			if(e.target === detailsModal) closeDetails();
+			if(e.target === buyModal) closeBuy();
+		});
+
+		// ===== CARRITO DE COMPRAS =====
+		let cart = [];
+		
+		// Cargar carrito del localStorage
+		function loadCartFromStorage(){
+			const saved = localStorage.getItem('laptopsCart');
+			if(saved){
+				try{
+					cart = JSON.parse(saved);
+					updateCart();
+				}catch(e){
+					console.error('Error loading cart:', e);
+					cart = [];
+				}
+			}
+		}
+		
+		// Guardar carrito en localStorage
+		function saveCartToStorage(){
+			localStorage.setItem('laptopsCart', JSON.stringify(cart));
+		}
+		
+		const cartSidebar = document.getElementById('cartSidebar');
+		const cartOverlay = document.getElementById('cartOverlay');
+		const cartToggle = document.getElementById('cartToggle');
+		const cartCloseBtn = document.getElementById('cartCloseBtn');
+		const cartItemsList = document.getElementById('cartItemsList');
+		const cartCounterBadge = ensureNavbarBadge() || document.getElementById('cartCounterBadge');
+		const cartBadge = document.getElementById('cartBadge');
+		const cartTotal = document.getElementById('cartTotal');
+		const checkoutBtn = document.getElementById('checkoutBtn');
+
+		// addToCart flexible: accepts either (id) or (id, name, price, img)
+		function addToCart(id, name, price, img){
+			// asegurar variable global cart
+			if(typeof cart === 'undefined') cart = [];
+			// Si no se pasó `name`, buscamos el producto en arrays existentes
+			if(typeof name === 'undefined'){
+				let p = null;
+				// buscar en productos principales
+				p = products.find(x => x.id === id);
+				// si no está, buscar en categoryProducts
+				if(!p){
+					for(const cat in categoryProducts){
+						const found = categoryProducts[cat].find(it => it.id === id);
+						if(found){ p = found; break; }
+					}
+				}
+				if(!p){
+					console.warn('addToCart: producto no encontrado', id);
+					showMessage('Producto no encontrado');
+					return;
+				}
+				const existing = cart.find(item => item.id === p.id);
+				if(existing) existing.qty++;
+				else cart.push({...p, qty: 1});
+			} else {
+				// Usar valores proporcionados (desde categoría)
+				const existing = cart.find(item => item.id === id);
+				if(existing) existing.qty++;
+				else cart.push({ id, name, price, img, qty: 1 });
+			}
+			updateCart();
+			saveCartToStorage();
+			showMessage('✓ Producto agregado al carrito');
+		}
+
+		function removeFromCart(id){
+			cart = cart.filter(item => item.id !== id);
+			updateCart();
+			saveCartToStorage();
+		}
+
+		function updateCart(){
+			// Actualizar UI del carrito
+			cartItemsList.innerHTML = '';
+			let total = 0;
+			let count = 0;
+
+			cart.forEach(item => {
+					const priceStr = String(item.price || '');
+					const priceNum = parseFloat(priceStr.replace(/[^0-9.\-]/g, '')) || 0;
+				const itemTotal = priceNum * item.qty;
+				total += itemTotal;
+				count += item.qty;
+
+				const itemRow = document.createElement('div');
+				itemRow.className = 'cart-item-row';
+				itemRow.innerHTML = `
+					<img class="cart-item-img" src="${item.img}" alt="${item.name}">
+					<div class="cart-item-info">
+						<div class="cart-item-name">${item.name}</div>
+						<div class="cart-item-price">${item.price}</div>
+						<div class="cart-item-qty">
+							<span>Cant: <strong>${item.qty}</strong></span>
+						</div>
+					</div>
+					<button class="cart-item-remove" onclick="removeFromCart(${item.id})">Quitar</button>
+				`;
+				cartItemsList.appendChild(itemRow);
+			});
+
+			cartTotal.textContent = '$' + total.toFixed(2);
+		
+		// Actualizar contador en navbar
+		cartCounterBadge.textContent = count;
+		
+		if(count > 0){
+			cartBadge.style.display = 'flex';
+			cartBadge.textContent = count;
+		} else {
+			cartBadge.style.display = 'none';
+		}
+			if(cart.length === 0){
+				cartItemsList.innerHTML = '<p style="text-align:center;color:var(--muted);margin-top:20px">No hay productos en el carrito</p>';
+			}
+		}
+
+		function openCart(){
+			cartSidebar.classList.add('open');
+			cartOverlay.classList.add('open');
+		}
+
+		function closeCart(){
+			cartSidebar.classList.remove('open');
+			cartOverlay.classList.remove('open');
+		}
+
+		cartToggle.addEventListener('click', openCart);
+		cartCloseBtn.addEventListener('click', closeCart);
+		cartOverlay.addEventListener('click', closeCart);
+
+		checkoutBtn.addEventListener('click', function(){
+			if(cart.length === 0){
+				alert('El carrito está vacío.');
+				return;
+			}
+			closeCart();
+			showBuyModal();
+		});
+
+		function showBuyModal(){
+			const total = cart.reduce((sum, item) => sum + parseFloat(item.price.replace('$', '')) * item.qty, 0).toFixed(2);
+			const itemNames = cart.map(item => item.name).join(', ');
+			document.getElementById('buyProduct').value = itemNames + ' — Total: $' + total;
+			buyModal.classList.add('show');
+		}
+		
+		// Cargar carrito al iniciar la página
+		loadCartFromStorage();
+
+		// ============ FUNCIONALIDAD DE LOGIN Y CATEGORÍAS ============
+
+		// Datos de productos por categoría
+		const categoryProducts = {
+				
+			laptops: [
+				{ id: 101, name: 'Laptop Gaming ASUS ROG', price: '$31,999.99', img: 'images/Laptop Gaming ASUS ROG.jpg', desc: 'Laptop gaming de alta performance', specs: ['Procesador: Intel Core i9 de última generación', 'GPU: NVIDIA GeForce RTX 40 series', 'Memoria RAM: 32 GB DDR5', 'Almacenamiento: 1 TB SSD NVMe', 'Pantalla: 15.6 pulgadas OLED 165Hz', 'Sistema Operativo: Windows 11 Pro'] },
+				{ id: 102, name: 'MacBook Pro 16"', price: '$19,999.99', img: 'images/MacBook Pro 16.jpg', desc: 'Laptop de lujo para profesionales' },
+				{ id: 103, name: 'Lenovo ThinkPad X1', price: '$14,999.99', img: 'images/Lenovo ThinkPad X1.jpg', desc: 'Laptop profesional y portátil', specs: ['Procesador: Intel Core Ultra 9 275H', 'GPU: Intel Arc Graphics', 'Memoria RAM: 16 GB LPDDR5', 'Almacenamiento: 512 GB SSD PCIe', 'Pantalla: 14 pulgadas 2.8K OLED', 'Sistema Operativo: Windows 11 Pro'] },
+				{ id: 104, name: 'HP Pavilion 15', price: '$9,999.99', img: 'images/HP Pavilion 15.jpg', desc: 'Laptop versátil para todos', specs: ['Procesador: Intel Core i5 de 13ª generación', 'GPU: Intel Iris Xe Graphics', 'Memoria RAM: 8 GB DDR4', 'Almacenamiento: 256 GB SSD', 'Pantalla: 15.6 pulgadas FHD', 'Sistema Operativo: Windows 11 Home'] },
+				{ id: 105, name: 'Dell XPS 13', price: '$13,499.99', img: 'images/Dell XPS 13.jpg', desc: 'Ultrabook compacto y potente', specs: ['Procesador: Intel Core Ultra 7 165U', 'GPU: Intel Arc Graphics', 'Memoria RAM: 16 GB LPDDR5', 'Almacenamiento: 512 GB SSD', 'Pantalla: 13.3 pulgadas 3K OLED', 'Sistema Operativo: Windows 11'] },
+				{ id: 106, name: 'Acer Aspire 5', price: '$11,699.99', img: 'images/Acer Aspire 5.jpg', desc: 'Laptop accesible y confiable', specs: ['Procesador: AMD Ryzen 5 5500U', 'GPU: AMD Radeon Graphics', 'Memoria RAM: 8 GB DDR4', 'Almacenamiento: 256 GB SSD', 'Pantalla: 15.6 pulgadas FHD', 'Sistema Operativo: Windows 11 Home'] }
+			],
+			mouses: [
+				{ id: 201, name: 'Logitech MX Master 3', price: '$599.99', img: 'images3/Logitech MX Master 3.jpg', desc: 'Ratón profesional inalámbrico', specs: ['Tipo: Inalámbrico 2.4GHz + Bluetooth', 'Sensor: HERO 4K (4000 DPI)', 'Botones: 7 botones program', 'Velocidad: Hasta 1000 IPS', 'Batería: Recargable (70 días)', 'Compatibilidad: Windows, Mac, Linux'] },
+				{ id: 202, name: 'Razer DeathAdder V3', price: '$769.99', img: 'images3/Razer DeathAdder V3.jpg', desc: 'Ratón gaming de precisión', specs: ['Tipo: Cableado + Inalámbrico', 'Sensor: Focus Pro 30K (30000 DPI)', 'Peso: 63 gramos (más ligero)', 'Botones: 8 botones', 'Velocidad: Hasta 650 IPS', 'RGB: Chroma personalizable'] },
+				{ id: 203, name: 'SteelSeries Rival 3', price: '$439.99', img: 'images3/SteelSeries Rival 3.jpg', desc: 'Ratón gaming económico', specs: ['Tipo: Cableado', 'Sensor: TrueMove Core (8500 DPI)', 'Peso: 77 gramos', 'Botones: 6 botones', 'Velocidad: Hasta 300 IPS', 'Cable: Trenzado de nylon'] },
+				{ id: 204, name: 'Apple Magic Mouse', price: '$2179.99', img: 'images3/Apple Magic Mouse.jpg', desc: 'Ratón inalámbrico táctil', specs: ['Tipo: Inalámbrico Bluetooth', 'Superficie: Multi-táctil', 'Batería: Recargable (meses de duracipon)', 'DPI: Ajustable', 'Compatibilidad: Mac, iPad', 'Diseño: Elegante y minimalista'] },
+				{ id: 205, name: 'Corsair M65 RGB', price: '$659.99', img: 'images3/Corsair M65 RGB.jpg', desc: 'Ratón gaming con peso ajustable', specs: ['Tipo: Cableado USB', 'Sensor: PMW3367 (12000 DPI)', 'Peso: Ajustable con 4 pesas de 3.6g', 'Botones: 8 botones program', 'RGB: Iluminación LED Corsair iCUE', 'Cable: Trenzado](https://link)'] },
+				{ id: 206, name: 'Microsoft Arc Touch', price: '$349.99', img: 'images3/Microsoft Arc Touch.jpg', desc: 'Ratón portátil compacto', specs: ['Tipo: Inalámbrico 2.4GHz', 'Diseño: Plegable y compacto', 'Sensor: BlueTrack (1000 DPI)', 'Batería: 2 AA (18 meses)', 'Botones: 3 botones', 'Peso: Ultraligero 90g'] }
+			],
+			keyboards: [
+				{ id: 301, name: 'Logitech MX Keys', price: '$2299.99', img: 'images2/Logitech MX Keys.jpg', desc: 'Teclado inalámbrico iluminado', specs: ['Tipo: Inalámbrico 2.4GHz + Bluetooth', 'Interruptores: Membrana silenciosa', 'Iluminación: LED retroiluminada ajustable', 'Batería: Recargable (10 días)', 'Compatibilidad: Windows, Mac, Linux', 'Diseño: Compacto y minimalista'] },
+				{ id: 302, name: 'Corsair K95 Platinum', price: '$1199.99', img: 'images2/Corsair K95 Platinum.jpg', desc: 'Teclado mecánico gaming premium', specs: ['Tipo: Cableado USB', 'Interruptores: Corsair OPX (Lineal)', 'Iluminación: RGB per-tecla iCUE', 'Característica: Rueda multimedia', 'Botones: Teclas de macro program', 'Estructura: Aluminio anodizado'] },
+				{ id: 303, name: 'Razer Huntsman Elite', price: '$2179.99', img: 'images2/Razer Huntsman Elite.jpg', desc: 'Teclado mecánico óptico', specs: ['Tipo: Cableado USB', 'Interruptores: Razer Opto Mech (Lineal)', 'Iluminación: RGB Chroma', 'Velocidad de activación: 1.5mm', 'Característica: Reposamuñecas magnético', 'Teclas: ABS con grabado'] },
+				{ id: 304, name: 'Apple Magic Keyboard', price: '$3299.99', img: 'images2/Apple Magic Keyboard.jpg', desc: 'Teclado inalámbrico recargable', specs: ['Tipo: Inalámbrico Bluetooth', 'Interruptores: Membrana de bajo perfil', 'Batería: Recargable (meses de duración)', 'Compatibilidad: Mac, iPad, iPhone', 'Diseño: Minimalista y elegante', 'Numpad: No incluye'] },
+				{ id: 305, name: 'SteelSeries Apex Pro', price: '$1229.99', img: 'images2/SteelSeries Apex Pro.jpg', desc: 'Teclado mecánico ajustable', specs: ['Tipo: Cableado USB', 'Interruptores: OmniPoint ajustables (0.4-3.8mm)', 'Iluminación: Per-tecla RGB', 'Característica: Rueda dinámica', 'Botones: Teclas de macro OLED', 'Estructura: Aluminio cepillado'] },
+				{ id: 306, name: 'Keychron K2 Pro', price: '$1879.99', img: 'images2/Keychron K2 Pro.jpg', desc: 'Teclado inalámbrico compacto', specs: ['Tipo: Inalámbrico 2.4GHz + Bluetooth', 'Interruptores: Hotswap (Gateron/Keychron)', 'Iluminación: RGB por tecla ajustable', 'Batería: Recargable USB-C (100 horas)', 'Compatibilidad: Windows, Mac, iOS, Android', 'Tamaño: Compacto 75%'] }
+			]
+		};
+
+		// Estado de login
+		let isLoggedIn = false;
+		let currentUser = null;
+
+		// Referencias del DOM
+		const btnLogin = document.getElementById('btnLogin');
+		const loginModal = document.getElementById('loginModal');
+		const loginForm = document.getElementById('loginForm');
+		const userMenu = document.getElementById('userMenu');
+		const userBtn = document.getElementById('userBtn');
+		const dropdownMenu = document.getElementById('dropdownMenu');
+		const userName = document.getElementById('userName');
+		const categoriesSection = document.getElementById('categoriesSection');
+		const btnLaptops = document.getElementById('btnLaptops');
+		const btnMouse = document.getElementById('btnMouse');
+		const btnKeyboards = document.getElementById('btnKeyboards');
+		
+		// Referencias para menú de categorías
+		const btnMenu = document.getElementById('btnMenu');
+		const categoryMenu = document.getElementById('categoryMenu');
+		const categorySidebar = document.getElementById('categorySidebar');
+		const categoryOverlay = document.getElementById('categoryOverlay');
+		const categorySidebarClose = document.getElementById('categorySidebarClose');
+
+		// Cargar estado de sesión desde localStorage
+		function loadLoginState(){
+			const savedUser = localStorage.getItem('laptopsUser');
+			if(savedUser){
+				isLoggedIn = true;
+				currentUser = savedUser;
+				updateUIAfterLogin();
+			}
+		}
+
+		// Abrir modal de login
+		btnLogin.addEventListener('click', function(){
+			loginModal.classList.add('show');
+		});
+
+		// Cerrar modal de login
+		function closeLoginModal(){
+			loginModal.classList.remove('show');
+			loginForm.reset();
+		}
+
+		// Manejar envío del formulario de login
+		loginForm.addEventListener('submit', function(e){
+			e.preventDefault();
+			const email = document.getElementById('loginEmail').value;
+			const password = document.getElementById('loginPassword').value;
+			
+			// Validación simple
+			if(email && password){
+				isLoggedIn = true;
+				currentUser = email.split('@')[0] || 'Usuario';
+				localStorage.setItem('laptopsUser', currentUser);
+				updateUIAfterLogin();
+				closeLoginModal();
+				showMessage('¡Bienvenido ' + currentUser + '!');
+			}
+		});
+
+		// Actualizar UI después de login
+		function updateUIAfterLogin(){
+			btnLogin.style.display = 'none';
+			userMenu.style.display = 'flex';
+			userName.textContent = currentUser;
+			categoriesSection.classList.add('show');
+			renderCategoryProducts();
+		}
+
+		// Logout
+		function logout(){
+			isLoggedIn = false;
+			currentUser = null;
+			localStorage.removeItem('laptopsUser');
+			btnLogin.style.display = 'block';
+			userMenu.style.display = 'none';
+			categoriesSection.classList.remove('show');
+			dropdownMenu.classList.remove('show');
+			loginForm.reset();
+			showMessage('Sesión cerrada correctamente');
+		}
+
+		// Toggle dropdown menu
+		userBtn.addEventListener('click', function(e){
+			e.stopPropagation();
+			dropdownMenu.classList.toggle('show');
+		});
+
+		// Cerrar dropdown al hacer click fuera
+		document.addEventListener('click', function(){
+			dropdownMenu.classList.remove('show');
+		});
+
+		// Renderizar productos de categorías
+		function renderCategoryProducts(){
+			// Laptops
+			const laptopsGrid = document.getElementById('laptopsGrid');
+			laptopsGrid.innerHTML = '';
+			categoryProducts.laptops.forEach(p => {
+				const card = createCategoryCard(p);
+				laptopsGrid.appendChild(card);
+			});
+
+			// Mouses
+			const mousesGrid = document.getElementById('mousesGrid');
+			mousesGrid.innerHTML = '';
+			categoryProducts.mouses.forEach(p => {
+				const card = createCategoryCard(p);
+				mousesGrid.appendChild(card);
+			});
+
+			// Keyboards
+			const keyboardsGrid = document.getElementById('keyboardsGrid');
+			keyboardsGrid.innerHTML = '';
+			categoryProducts.keyboards.forEach(p => {
+				const card = createCategoryCard(p);
+				keyboardsGrid.appendChild(card);
+			});
+		}
+
+		// Crear tarjeta de producto
+		function createCategoryCard(product){
+			const card = document.createElement('div');
+			card.className = 'card';
+			card.innerHTML = `
+				<img class="card-img" src="${product.img}" alt="${product.name}">
+				<h3 class="card-title">${product.name}</h3>
+				<p class="price">${product.price}</p>
+				<p class="desc">${product.desc}</p>
+				<div class="card-actions">
+					<button class="btn btn-small" onclick="showDetailsCategory(${product.id})">Detalles</button>
+					<button class="btn btn-small" onclick="showBuyCategory(${product.id})">Comprar</button>
+				</div>
+				<button class="btn btn-small" style="width:100%;margin-top:8px" onclick="addToCart(${product.id})">Agregar al carrito</button>
+			`;
+			return card;
+		}
+
+		// Mostrar detalles de producto de categoría
+		function showDetailsCategory(id){
+			let product = null;
+			for(let category in categoryProducts){
+				product = categoryProducts[category].find(p => p.id === id);
+				if(product) break;
+			}
+			if(product){
+				document.getElementById('detailsImg').src = product.img;
+				document.getElementById('detailsName').textContent = product.name;
+				document.getElementById('detailsDesc').textContent = product.desc;
+				document.getElementById('detailsPrice').textContent = product.price;
+				const specsList = document.getElementById('detailsSpecs');
+				specsList.innerHTML = '';
+				if(product.specs && Array.isArray(product.specs)){
+					product.specs.forEach(spec => {
+						const li = document.createElement('li');
+						li.textContent = spec;
+						specsList.appendChild(li);
+					});
+				}
+				detailsModal.classList.add('show');
+			}
+		}
+
+		// Abrir modal de compra para un producto de categoría (no añade al carrito)
+		function showBuyCategory(id){
+			let product = null;
+			for(let category in categoryProducts){
+				product = categoryProducts[category].find(p => p.id === id);
+				if(product) break;
+			}
+			if(!product){
+				product = products.find(p => p.id === id) || null;
+			}
+			if(product){
+				document.getElementById('buyProduct').value = product.name + ' — ' + product.price;
+				// abrir modal de compra
+				buyModal.classList.add('show');
+			} else {
+				showMessage('Producto no encontrado para compra');
+			}
+		}
+
+		// Función mejorada de addToCart con soporte para ambas firmas
+		function addToCart(id, name, price, img){
+			// Si se llamó solo con id, buscamos el producto en los arrays disponibles
+			if(typeof name === 'undefined'){
+				let found = products.find(p => p.id === id) || null;
+				if(!found){
+					for(const cat in categoryProducts){
+						found = categoryProducts[cat].find(p => p.id === id);
+						if(found) break;
+					}
+				}
+				if(found){
+					name = found.name;
+					price = found.price;
+					img = found.img;
+				}
+			}
+
+			// Añadir o incrementar cantidad
+			const existing = cart.find(item => item.id === id);
+			if(!existing){
+				cart.push({ id, name: name || ('Producto ' + id), price: price || '$0.00', img: img || '', qty: 1 });
+			} else {
+				cart.find(item => item.id === id).qty += 1;
+			}
+			updateCart();
+			saveCartToStorage();
+			showMessage('✓ Producto agregado al carrito');
+			// Abrir carrito para feedback inmediato
+			try{ openCart(); }catch(e){}
+		}
+
+		// Mostrar mensaje temporal
+		function showMessage(msg){
+			const div = document.createElement('div');
+			div.style.cssText = 'position:fixed;top:80px;right:20px;background:var(--accent);color:#fff;padding:12px 20px;border-radius:6px;z-index:2000;font-weight:600';
+			div.textContent = msg;
+			document.body.appendChild(div);
+			setTimeout(() => div.remove(), 3000);
+		}
+
+		// Scroll a sección de categorías
+		function scrollToCategories(){
+			document.getElementById('categoriesSection').scrollIntoView({ behavior: 'smooth' });
+			dropdownMenu.classList.remove('show');
+		}
+
+		// Funciones para mostrar cada categoría
+		function showOnlyCategory(categoryType){
+			categoriesSection.classList.add('show');
+			// Ocultar todas las categorías
+			document.querySelector('.category:nth-child(1)').style.display = 'none';
+			document.querySelector('.category:nth-child(2)').style.display = 'none';
+			document.querySelector('.category:nth-child(3)').style.display = 'none';
+			
+			// Mostrar solo la categoría seleccionada
+			if(categoryType === 'laptops') {
+				document.querySelector('.category:nth-child(1)').style.display = 'block';
+			} else if(categoryType === 'mouse') {
+				document.querySelector('.category:nth-child(2)').style.display = 'block';
+			} else if(categoryType === 'keyboards') {
+				document.querySelector('.category:nth-child(3)').style.display = 'block';
+			}
+			
+			// Scroll a la sección
+			categoriesSection.scrollIntoView({ behavior: 'smooth' });
+		}
+
+		// Event listeners para botones de categoría (si existen)
+		if(btnLaptops){
+			btnLaptops.addEventListener('click', function(){
+				renderCategoryProducts();
+				showOnlyCategory('laptops');
+			});
+		}
+
+		if(btnMouse){
+			btnMouse.addEventListener('click', function(){
+				renderCategoryProducts();
+				showOnlyCategory('mouse');
+			});
+		}
+
+		if(btnKeyboards){
+			btnKeyboards.addEventListener('click', function(){
+				renderCategoryProducts();
+				showOnlyCategory('keyboards');
+			});
+		}
+
+		// ============ FUNCIONALIDAD SIDEBAR DE CATEGORÍAS ============
+
+		// Asegura que exista el overlay y la barra lateral; crea dinámicamente si es necesario
+		function ensureCategoryPanel(){
+			if(!categoryOverlay){
+				categoryOverlay = document.createElement('div');
+				categoryOverlay.id = 'categoryOverlay';
+				categoryOverlay.className = 'category-overlay';
+				document.body.appendChild(categoryOverlay);
+				categoryOverlay.addEventListener('click', closeCategorySidebar);
+			}
+
+			if(!categorySidebar){
+				categorySidebar = document.createElement('aside');
+				categorySidebar.id = 'categorySidebar';
+				categorySidebar.className = 'category-sidebar';
+				categorySidebar.innerHTML = `
+					<div class="category-sidebar-header">
+						<h3>Categorías</h3>
+						<button class="category-close" id="categorySidebarClose">✕</button>
+					</div>
+					<nav class="category-nav">
+						<button class="category-nav-item" data-cat="laptops">💻 Laptops</button>
+						<button class="category-nav-item" data-cat="mouse">🖱️ Ratones (Mouse)</button>
+						<button class="category-nav-item" data-cat="keyboards">⌨️ Teclados</button>
+					</nav>
+				`;
+				document.body.appendChild(categorySidebar);
+				categorySidebarClose = categorySidebar.querySelector('#categorySidebarClose');
+				if(categorySidebarClose) categorySidebarClose.addEventListener('click', closeCategorySidebar);
+				// attach click handlers to nav items
+				const items = categorySidebar.querySelectorAll('.category-nav-item');
+				items.forEach(it => it.addEventListener('click', function(){
+					const c = this.getAttribute('data-cat');
+					showCategory(c);
+				}));
+			}
+		}
+
+		// Abrir sidebar de categorías (asegura creación antes de usar)
+		function openCategorySidebar(){
+			ensureCategoryPanel();
+			if(categorySidebar) categorySidebar.classList.add('open');
+			if(categoryOverlay) categoryOverlay.classList.add('open');
+		}
+
+		// Cerrar sidebar de categorías
+		function closeCategorySidebar(){
+			if(categorySidebar) categorySidebar.classList.remove('open');
+			if(categoryOverlay) categoryOverlay.classList.remove('open');
+		}
+
+		// Mostrar categoría y cerrar sidebar
+		function showCategory(categoryType){
+			renderCategoryProducts();
+			showOnlyCategory(categoryType);
+			closeCategorySidebar();
+			showMessage('Mostrando: ' + (categoryType === 'laptops' ? 'Laptops' : categoryType === 'mouse' ? 'Ratones' : 'Teclados'));
+		}
+
+		// Función para mostrar solo la categoría seleccionada (como en tu ejemplo)
+		function mostrarProductos(categoria){
+			// Mostrar la sección de categorías
+			categoriesSection.style.display = 'block';
+			
+			// Ocultar todas las categorías
+			document.querySelectorAll('#categoriesSection .category').forEach(sec => {
+				sec.style.display = 'none';
+			});
+			
+			// Mostrar la seleccionada por índice
+			const cats = document.querySelectorAll('#categoriesSection .category');
+			if(categoria === 'laptops' && cats[0]) cats[0].style.display = 'block';
+			else if(categoria === 'mouse' && cats[1]) cats[1].style.display = 'block';
+			else if(categoria === 'keyboards' && cats[2]) cats[2].style.display = 'block';
+			
+			// Renderizar y scroll
+			renderCategoryProducts();
+			categoriesSection.scrollIntoView({ behavior: 'smooth' });
+		}
+
+		// --- Menú de categorías simple (toggle como en tu ejemplo) ---
+		if(btnMenu){
+			let menu = document.getElementById('menuCategorias');
+			if(!menu){
+				menu = document.createElement('div');
+				menu.id = 'menuCategorias';
+				menu.style.display = 'none';
+				menu.innerHTML = `
+					<ul style="list-style:none;margin:0;padding:6px;">
+						<li><button onclick="mostrarProductos('laptops')" style="width:100%;padding:8px;text-align:left;border:1px solid #e6e6e6;background:none;border-radius:4px;cursor:pointer;margin:4px 0">💻 Laptops</button></li>
+						<li><button onclick="mostrarProductos('mouse')" style="width:100%;padding:8px;text-align:left;border:1px solid #e6e6e6;background:none;border-radius:4px;cursor:pointer;margin:4px 0">🖱️ Mouse</button></li>
+						<li><button onclick="mostrarProductos('keyboards')" style="width:100%;padding:8px;text-align:left;border:1px solid #e6e6e6;background:none;border-radius:4px;cursor:pointer;margin:4px 0">⌨️ Teclados</button></li>
+					</ul>
+				`;
+				btnMenu.parentNode.insertBefore(menu, btnMenu.nextSibling);
+			}
+
+			// Toggle menú
+			btnMenu.addEventListener('click', function(e){
+				e.stopPropagation();
+				menu.style.display = (menu.style.display === 'none' || menu.style.display === '') ? 'block' : 'none';
+			});
+
+			// Cerrar al click fuera
+			document.addEventListener('click', function(e){
+				if(menu.style.display !== 'block') return;
+				if(!menu.contains(e.target) && e.target !== btnMenu){
+					menu.style.display = 'none';
+				}
+			});
+		}
+
+		// Mostrar modal de pedidos
+		function showOrders(){
+			const modal = document.getElementById('ordersModal');
+			const list = document.getElementById('ordersList');
+			let orders = [];
+			try{ orders = JSON.parse(localStorage.getItem('laptopsOrders') || '[]'); }catch(e){ orders = []; }
+			if(!list) return;
+			if(orders.length === 0){
+				list.innerHTML = '<p>No hay pedidos aún.</p>';
+			} else {
+				list.innerHTML = orders.map(o => `
+					<div style="border-bottom:1px solid #eee;padding:8px 0">
+						<div style="font-weight:700">Pedido #${o.id}</div>
+						<div style="font-size:0.9rem;color:#666">${new Date(o.when).toLocaleString()}</div>
+						<div style="margin-top:6px">${o.items}</div>
+						<div style="margin-top:6px;font-size:0.9rem">Cliente: ${o.customer || '—'}</div>
+						<div style="font-size:0.9rem">Dirección: ${o.address || '—'}</div>
+					</div>
+				`).join('');
+			}
+			if(modal) modal.classList.add('show');
+		}
+
+		function closeOrders(){
+			const modal = document.getElementById('ordersModal');
+			if(modal) modal.classList.remove('show');
+		}
+
+		// Enlazar botón Ver pedidos
+		const viewOrdersBtn = document.getElementById('viewOrdersBtn');
+		if(viewOrdersBtn){ viewOrdersBtn.addEventListener('click', showOrders); }
+
+		// Cargar estado de login al iniciar
+		loadLoginState();
+	</script>
+</body>
+</html>
+
